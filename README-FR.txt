@@ -1,26 +1,23 @@
-NOVA AI — PACK PWA DE DÉPART
+NOVA AI — moteur local GGUF (prototype d'intégration)
+=====================================================
 
 CONTENU
-- index.html : interface NOVA, assistants personnalisables, mémoire par assistant, historique et éditeur HTML.
-- manifest.webmanifest : identité de l’application installable.
-- sw.js : cache hors ligne de l’interface.
-- icon.svg : icône.
+- index.html : interface de test du moteur local
+- manifest.webmanifest : métadonnées PWA
+- sw.js : cache de l'interface
+
+UTILISATION
+1. Héberger ces fichiers sur un site HTTPS (par exemple GitHub Pages).
+2. Ouvrir l'URL dans Safari.
+3. Choisir un fichier .gguf via le bouton d'import.
+4. Commencer avec un modèle Q4 très léger (idéalement < 500 Mo), contexte 512/1024.
+5. Charger le modèle, puis discuter.
 
 IMPORTANT
-Cette version est un prototype PWA. Elle ne contient PAS de modèle d’intelligence artificielle. La réponse dans la conversation est une réponse de démonstration. Les données sont enregistrées dans le stockage local du navigateur : effacer les données du site ou changer de navigateur peut les faire perdre.
-Le cache hors ligne fonctionne après le premier chargement réussi. L’installation PWA et le service worker nécessitent une adresse HTTPS (ou localhost). Un fichier ouvert directement depuis l’application Fichiers ne suffit pas.
-
-INSTALLATION AVEC UN IPHONE SEUL (HÉBERGEMENT HTTPS REQUIS)
-1. Crée un compte GitHub si tu n’en as pas.
-2. Dans Safari, crée un nouveau dépôt public nommé nova-ai (github.com → + → New repository).
-3. Dans le dépôt, utilise Add file → Upload files et ajoute les fichiers contenus dans ce dossier. Valide avec Commit changes.
-4. Dans Settings → Pages, choisis Deploy from a branch, branche main, dossier /(root), puis Save.
-5. Attends la publication. Ouvre l’adresse Pages indiquée par GitHub dans Safari.
-6. Dans Safari : bouton Partager → Sur l’écran d’accueil → Ajouter.
-7. Ouvre NOVA AI depuis sa nouvelle icône une première fois avec Internet pour que l’interface soit mise en cache.
-
-LIMITES MATÉRIELLES
-L’iPhone SE 2020 possède une mémoire vive limitée. Un modèle local de langage pourrait être lent, fortement contraint ou ne pas fonctionner dans Safari. Cette PWA ne prétend pas inclure ce moteur. Une vraie app iOS native signée nécessite normalement un environnement de compilation Apple et une signature appropriée.
-
-SÉCURITÉ
-N’importe quel code HTML importé peut contenir des scripts. L’aperçu utilise une iframe sandboxée, mais n’importe pas de fichiers inconnus ou non fiables.
+- Le moteur utilisé est @wllama/wllama 3.13.0, chargé depuis esm.sh, avec les fichiers WebAssembly servis via le mécanisme CDN du projet.
+- La première initialisation nécessite une connexion Internet. L'interface est mise en cache, mais le moteur/WASM et les modèles ne sont PAS garantis hors ligne par ce prototype.
+- Le fichier modèle est chargé en mémoire à partir du sélecteur de fichiers; il n'est pas conservé durablement après fermeture/rechargement.
+- Ce n'est pas encore le moteur intégré au projet NOVA AI complet : c'est une page autonome de validation.
+- Compatibilité iOS/Safari et performance non garanties. L'iPhone SE 2020 (3 Go RAM) peut fermer la page ou échouer avec certains modèles. Ne pas supposer qu'un modèle de 500 Mo consommera seulement 500 Mo de RAM : le runtime, le cache KV et le contexte ajoutent de la mémoire.
+- Pour une application hors ligne complète, il faudra embarquer les fichiers WASM, gérer le stockage persistant des modèles (IndexedDB/OPFS selon compatibilité) et tester sur l'appareil.
+- Aucun modèle n'est inclus dans ce ZIP.
